@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zakat Calculator</title>
+<style>
+    body {
+        height:auto;
+        font-family: Arial, sans-serif;
+        background-image: url(middle-img.jpg) ;
+        background-size: cover; 
+        background-repeat: no-repeat; 
+        background-position: center;
+    }
+
+    #container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 3px solid rgb(7, 222, 246);
+        border-radius: 10px;
+    }
+    input[type="number"] {
+        width: 100%;
+        padding: 9px;
+        margin: 2px 0;
+        margin-bottom: 1rem;
+        box-sizing: border-box;
+        background-color: transparent;
+        color: rgb(0, 0, 0);
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    input::placeholder{
+        color: #6c6969fa;
+    }
+
+    input:focus {
+    outline: none; 
+    border:3px solid rgb(7, 222, 246); 
+}
+
+    button {
+        width: 100%;
+        padding: 9px;
+        background-color: #38993c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 1rem;
+        font-weight: 800;
+        font-size: 1rem;
+    }
+    #result {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    h2{ 
+        text-decoration: double;
+        text-align: center;
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    label{
+        color: rgba(0, 0, 0, 0.829);
+        font-size: 1.1rem;
+        font-weight: 800;
+    }
+
+    mark {
+        background-color:rgba(7, 222, 246, 0.253);
+    }
+
+    @media only screen and (max-width: 480px) {
+        #container {
+            max-width: 90%;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid rgb(7, 222, 246);
+        }
+
+        input[type="number"]{
+            color: rgb(142, 208, 234);
+            background-color: transparent;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+        
+        input::placeholder{
+            color: rgba(0, 0, 0, 0.769);
+            font-size: 200;
+        }
+
+        body{
+            height: 50rem;
+            background-image: url(mobileimg-zkt\ \(1\).jpeg);
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-position: center;
+        }
+
+        label{
+            color:  rgb(7, 222, 246);    
+            font-weight: 700;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        button{
+            margin-bottom: 1rem;
+            background-color: rgb(7, 222, 246);
+        }
+
+        h2{
+            color: #dbd8d8;
+            text-decoration: double;
+        }
+
+       
+    }
+</style>
+</head>
+<body>
+
+<div id="container">
+    <h2>Zakat Calculator</h2>
+    <label for="cash"><mark>Your Cash Amount:</mark></label>
+    <input type="number" id="cash" placeholder="Enter cash amount">
+
+    <label for="gold"><mark>Gold Amount In Grams (10 GM = 1 Tola)</mark></label>
+    <input type="number" id="gold" placeholder="Enter gold amount">
+
+    <label for="goldRate"><mark>Current Gold Rate (per 1 Tola)</mark> </label>
+    <input type="number" id="goldRate" placeholder="Enter current gold rate">
+
+    <label for="silver"><mark>Silver Amount In Grams(10 GM = 1 Tola)</mark></label>
+    <input type="number" id="silver" placeholder="Enter silver amount">
+
+    <label for="silverRate"><mark>Current Silver Rate (per 1 Tola)</mark> </label>
+    <input type="number" id="silverRate" placeholder="Enter current silver rate">
+
+    <button onclick="calculateZakat()">Calculate Zakat</button>
+
+    <div id="result"></div>
+
+</div>
+<script>
+    function calculateZakat() {
+        var cashAmount = parseFloat(document.getElementById('cash').value) || 0;
+        var goldAmount = parseFloat(document.getElementById('gold').value) || 0;
+        var goldRatePer10Grams = parseFloat(document.getElementById('goldRate').value) || 0;
+        var silverAmount = parseFloat(document.getElementById('silver').value) || 0;
+        var silverRatePer10Grams = parseFloat(document.getElementById('silverRate').value) || 0;
+    
+        var goldValuePerGram = goldRatePer10Grams / 10;
+        var silverValuePerGram = silverRatePer10Grams / 10;
+        var nisab = 85 * goldValuePerGram;
+        var totalWealth = cashAmount + (goldAmount * goldValuePerGram) + (silverAmount * silverValuePerGram);
+    
+        if (totalWealth < nisab) {
+            document.getElementById('result').innerHTML = "You are not eligible to pay Zakat as your wealth is below the Nisab threshold.";
+
+            
+document.getElementById('result').style.color='rgb(173,216,230)';
+document.getElementById('result').style.fontSize='1.4rem';
+document.getElementById('result').style.fontWeight='700'
+        } else {
+            var zakatCash = 0.025 * cashAmount;
+            var zakatGold = 0.025 * goldAmount * goldValuePerGram;
+            var zakatSilver = 0.025 * silverAmount * silverValuePerGram;
+            var totalZakat = zakatCash + zakatGold + zakatSilver;
+    
+            var resultText = "";
+            if (zakatCash > 0) {
+                resultText += "Cash Zakat: " + zakatCash.toFixed(2) + "<br>";
+            }
+            if (zakatGold > 0) {
+                resultText += "Gold Zakat: " + zakatGold.toFixed(2) + "<br>";
+            }
+            if (zakatSilver > 0) {
+                resultText += "Silver Zakat: " + zakatSilver.toFixed(2) + "<br>";
+            }
+            resultText += "Total Zakat Due: " + totalZakat.toFixed(2);
+    
+            document.getElementById('result').innerHTML = resultText;
+
+            
+document.getElementById('result').style.color='rgb(173,216,230)';
+document.getElementById('result').style.fontSize='1.4rem';
+document.getElementById('result').style.fontWeight='700'
+        }
+    }
+    </script>
+
+
+</body>
+</html>
+
